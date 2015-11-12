@@ -1,7 +1,12 @@
 package android.bignerdranch.com.photogallery;
 
+/**
+ * Created by Mike on 11/10/15.
+ */
+
 import android.net.Uri;
 import android.util.Log;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,7 +22,8 @@ import java.util.List;
 
 public class FlickrFetcher {
 
-    private static final String TAG = "FlickrFetch";
+    private static final String TAG = "FlickrFetchr";
+
     private static final String API_KEY = "6d64950316f214389fdb6fe511c214c7";
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {
@@ -27,7 +33,9 @@ public class FlickrFetcher {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             InputStream in = connection.getInputStream();
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new IOException(connection.getResponseMessage() + " : " + urlSpec);
+                throw new IOException(connection.getResponseMessage() +
+                        ": with " +
+                        urlSpec);
             }
             int bytesRead = 0;
             byte[] buffer = new byte[1024];
@@ -40,13 +48,14 @@ public class FlickrFetcher {
             connection.disconnect();
         }
     }
-
     public String getUrlString(String urlSpec) throws IOException {
-        return  new String(getUrlBytes(urlSpec));
+        return new String(getUrlBytes(urlSpec));
     }
 
     public List<GalleryItem> fetchItems() {
+
         List<GalleryItem> items = new ArrayList<>();
+
         try {
             String url = Uri.parse("https://api.flickr.com/services/rest/")
                     .buildUpon()
@@ -60,28 +69,35 @@ public class FlickrFetcher {
             Log.i(TAG, "Received JSON: " + jsonString);
             JSONObject jsonBody = new JSONObject(jsonString);
             parseItems(items, jsonBody);
-        } catch (JSONException je) {
-            Log.e(TAG, "Failed to parse JSON", je);
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch items", ioe);
+        } catch (JSONException je) {
+            Log.e(TAG, "Failed to parse JSON", je);
         }
+
         return items;
     }
 
-    private void parseItems(List<GalleryItem> items, JSONObject jsonBody) throws IOException, JSONException {
+    private void parseItems(List<GalleryItem> items, JSONObject jsonBody)
+            throws IOException, JSONException {
+
         JSONObject photosJsonObject = jsonBody.getJSONObject("photos");
         JSONArray photoJsonArray = photosJsonObject.getJSONArray("photo");
+
         for (int i = 0; i < photoJsonArray.length(); i++) {
             JSONObject photoJsonObject = photoJsonArray.getJSONObject(i);
 
             GalleryItem item = new GalleryItem();
-            item.setID(photoJsonObject.getString("id"));
+            item.setId(photoJsonObject.getString("id"));
             item.setCaption(photoJsonObject.getString("title"));
+
             if (!photoJsonObject.has("url_s")) {
                 continue;
             }
+
             item.setUrl(photoJsonObject.getString("url_s"));
             items.add(item);
         }
     }
+
 }

@@ -2,12 +2,9 @@ package android.bignerdranch.com.photogallery;
 
 
 public class GalleryItem {
-
     private String mCaption;
-    private String mID;
+    private String mId;
     private String mUrl;
-
-    //  Getters and setters
 
     public String getCaption() {
         return mCaption;
@@ -17,12 +14,12 @@ public class GalleryItem {
         mCaption = caption;
     }
 
-    public String getID() {
-        return mID;
+    public String getId() {
+        return mId;
     }
 
-    public void setID(String ID) {
-        mID = ID;
+    public void setId(String id) {
+        mId = id;
     }
 
     public String getUrl() {
@@ -32,7 +29,6 @@ public class GalleryItem {
     public void setUrl(String url) {
         mUrl = url;
     }
-
     @Override
     public String toString() {
         return mCaption;
