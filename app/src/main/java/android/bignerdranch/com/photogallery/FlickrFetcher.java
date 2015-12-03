@@ -99,5 +99,5 @@ public class FlickrFetcher {
             items.add(item);
         }
     }
-
+    //
 }
